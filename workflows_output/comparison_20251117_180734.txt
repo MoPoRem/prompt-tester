@@ -1,0 +1,25 @@
+n8n Workflow Generation Comparison
+Generated at: 2025-11-17 18:07:34
+
+User Requirement:
+
+    I need to scrape this url every 10 minutes: https://datarama.ai/pricing and then store the prices for its plans.
+    
+
+================================================================================
+
+Model: openai/gpt-oss-20b
+Status: ERROR - Failed to fetch nodes: 503 Server Error: Service Unavailable for url: https://api.datarama.ai/api/internal-nodes/nodes/
+
+--------------------------------------------------------------------------------
+
+Model: openai/gpt-oss-120b
+Status: ERROR - Failed to fetch nodes: 503 Server Error: Service Unavailable for url: https://api.datarama.ai/api/internal-nodes/nodes/
+
+--------------------------------------------------------------------------------
+
+Model: google/gemini-2.5-flash
+Status: ERROR - Failed to fetch nodes: 503 Server Error: Service Unavailable for url: https://api.datarama.ai/api/internal-nodes/nodes/
+
+--------------------------------------------------------------------------------
+

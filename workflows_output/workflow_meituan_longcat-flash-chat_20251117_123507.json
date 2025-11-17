@@ -1,0 +1,9 @@
+Now I have all the node details I need. Let me create a workflow that:
+1. Triggers every 10 minutes using the Interval node
+2. Scrapes the Datarama pricing page using the CUSTOM.scrape node
+3. Parses the pricing data using a parser (I'll create a parser for pricing data)
+4. Stores the parsed pricing data using CUSTOM.storeData
+
+Here's the workflow JSON:<longcat_tool_call>
+{"name": "Datarama Pricing Monitor", "nodes": [{"parameters": {"interval": 10, "unit": "minutes"}, "name": "Interval", "type": "n8n-nodes-base.interval", "typeVersion": 1, "position": [200, 300]}, {"parameters": {"apiKey": "DATARAMA_API_KEY", "targetUrl": "https://datarama.ai/pricing", "poll": false}, "name": "Scrape Pricing Page", "type": "CUSTOM.scrape", "typeVersion": 1, "position": [500, 300]}, {"parameters": {"apiKey": "DATARAMA_API_KEY", "parserId": 12345, "aiPrompt": "Extract the pricing information including plan names, prices, features, and any special offers from the Datarama pricing page. Return structured JSON with plan details.", "inputFormat": "text", "inputProperty": "response.body"}, "name": "Parse Pricing Data", "type": "CUSTOM.parserRunner", "typeVersion": 1, "position": [800, 300]}, {"parameters": {"apiKey": "DATARAMA_API_KEY", "mode": "insert", "name": "Datarama Pricing History", "slug": "datarama-pricing-history"}, "name": "Store Pricing Data", "type": "CUSTOM.storeData", "typeVersion": 1, "position": [1100, 300]}], "connections": {"Interval": {"main": [{"node": "Scrape Pricing Page", "type": "main", "index": 0}]}, "Scrape Pricing Page": {"main": [{"node": "Parse Pricing Data", "type": "main", "index": 0}]}, "Parse Pricing Data": {"main": [{"node": "Store Pricing Data", "type": "main", "index": 0}]}}, "settings": {"executionOrder": "v1", "timezone": "UTC"}}
+</longcat_tool_call>

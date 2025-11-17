@@ -113,12 +113,8 @@ class N8NWorkflowGenerator:
         )
         
         self.pricing = {
-            "openai/gpt-4.1": {"input": 2.00, "output": 8.00},
-            "openai/gpt-4.1-mini": {"input": 0.40, "output": 1.60},
-            "openai/gpt-5-mini": {"input": 0.25, "output": 2.00},
-            "zai/glm-4.6": {"input": 0.45, "output": 1.80},
-            "anthropic/claude-haiku-4.5": {"input": 1.00, "output": 5.00},
-            "google/gemini-2.5-flash-lite": {"input": 0.10, "output": 0.40},
+            "openai/gpt-oss-20b": {"input": 0.07, "output": 0.30},
+            "openai/gpt-oss-120b": {"input": 0.10, "output": 0.50},
             "google/gemini-2.5-flash": {"input": 0.30, "output": 2.50},
         }
         

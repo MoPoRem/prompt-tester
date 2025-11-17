@@ -1,0 +1,52 @@
+n8n Workflow Generation Comparison
+Generated at: 2025-11-17 12:35:07
+
+User Requirement:
+
+    I need to scrape this url every 10 minutes: https://datarama.ai/pricing and then store the prices for its plans.
+    
+
+================================================================================
+
+Model: openai/gpt-4.1-mini
+Status: ERROR - Failed to fetch node details for 'CUSTOM.Scraper': 404 Client Error: Not Found for url: https://api.datarama.ai/api/internal-nodes/nodes/CUSTOM.Scraper/
+
+--------------------------------------------------------------------------------
+
+Model: openai/gpt-oss-20b
+Response Time: 196.60s
+Input Tokens: 150980
+Output Tokens: 1623
+Cost: $0.011056
+
+--------------------------------------------------------------------------------
+
+Model: zai/glm-4.6
+Response Time: 18.86s
+Input Tokens: 274397
+Output Tokens: 997
+Cost: $0.125273
+
+--------------------------------------------------------------------------------
+
+Model: meituan/longcat-flash-chat
+Response Time: 128.75s
+Input Tokens: 190402
+Output Tokens: 667
+Cost: $0.000000
+
+--------------------------------------------------------------------------------
+
+Model: google/gemini-2.5-flash-lite
+Status: ERROR - Failed to fetch node details for 'n8n-nodes-base.json': 404 Client Error: Not Found for url: https://api.datarama.ai/api/internal-nodes/nodes/n8n-nodes-base.json/
+
+--------------------------------------------------------------------------------
+
+Model: google/gemini-2.5-flash
+Response Time: 17.97s
+Input Tokens: 86364
+Output Tokens: 751
+Cost: $0.027787
+
+--------------------------------------------------------------------------------
+

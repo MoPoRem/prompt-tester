@@ -1,0 +1,116 @@
+
+```json
+{
+  "name": "Datarama Pricing Scraper",
+  "nodes": [
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyX",
+              "value": 10,
+              "unit": "minutes"
+            }
+          ]
+        }
+      },
+      "name": "Cron Trigger",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [200, 200]
+    },
+    {
+      "parameters": {
+        "resource": "scrape",
+        "operation": "fetch",
+        "apiKey": "YOUR_DATARAMA_API_KEY",
+        "baseUrl": "https://api.datarama.ai",
+        "targetUrl": "https://datarama.ai/pricing",
+        "poll": false
+      },
+      "name": "Scrape Pricing Page",
+      "type": "CUSTOM.scrape",
+      "typeVersion": 1,
+      "position": [500, 200]
+    },
+    {
+      "parameters": {
+        "resource": "parser",
+        "operation": "run",
+        "apiKey": "YOUR_DATARAMA_API_KEY",
+        "baseUrl": "https://api.datarama.ai",
+        "parserId": 1,
+        "inputFormat": "text",
+        "inputProperty": "response.body",
+        "aiPrompt": "Extract all pricing plans and their details including plan name, price, billing period (monthly/yearly), features list, and any other relevant pricing information. Return structured JSON data."
+      },
+      "name": "Parse Pricing Data",
+      "type": "CUSTOM.parserRunner",
+      "typeVersion": 1,
+      "position": [800, 200]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "scrapedUrl",
+              "value": "https://datarama.ai/pricing"
+            }
+          ],
+          "number": [
+            {
+              "name": "scrapedAt",
+              "value": "={{ $now.toUnix() }}"
+            }
+          ]
+        },
+        "options": {
+          "dotNotation": true
+        }
+      },
+      "name": "Add Metadata",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [1100, 200]
+    },
+    {
+      "parameters": {
+        "apiKey": "YOUR_DATARAMA_API_KEY",
+        "baseUrl": "https://api.datarama.ai",
+        "dataKey": "data",
+        "mode": "insert",
+        "name": "Datarama Pricing Plans",
+        "slug": "datarama-pricing-plans"
+      },
+      "name": "Store Pricing Data",
+      "type": "CUSTOM.storeData",
+      "typeVersion": 1,
+      "position": [1400, 200]
+    }
+  ],
+  "connections": {
+    "Cron Trigger": {
+      "main": [[{"node": "Scrape Pricing Page", "type": "main", "index": 0}]]
+    },
+    "Scrape Pricing Page": {
+      "main": [[{"node": "Parse Pricing Data", "type": "main", "index": 0}]]
+    },
+    "Parse Pricing Data": {
+      "main": [[{"node": "Add Metadata", "type": "main", "index": 0}]]
+    },
+    "Add Metadata": {
+      "main": [[{"node": "Store Pricing Data", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+  "versionId": "1"
+}
+```
