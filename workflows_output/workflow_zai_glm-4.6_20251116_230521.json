@@ -1,0 +1,94 @@
+
+```json
+{
+  "name": "Datarama Pricing Scraper",
+  "nodes": [
+    {
+      "parameters": {
+        "interval": 10,
+        "unit": "minutes"
+      },
+      "name": "Interval Trigger",
+      "type": "n8n-nodes-base.interval",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "resource": "scrape",
+        "operation": "fetch",
+        "apiKey": "{{ $credentials.dataramaApi?.apiKey }}",
+        "targetUrl": "https://datarama.ai/pricing",
+        "poll": true
+      },
+      "name": "Scrape Pricing Page",
+      "type": "CUSTOM.scrape",
+      "typeVersion": 1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "resource": "parser",
+        "operation": "run",
+        "apiKey": "{{ $credentials.dataramaApi?.apiKey }}",
+        "parserId": 1,
+        "aiPrompt": "Extract all pricing plan information including plan names, prices, features, and billing tiers. Return structured data with details for each plan available.",
+        "inputFormat": "text",
+        "inputProperty": "response.body"
+      },
+      "name": "Extract Pricing Data",
+      "type": "CUSTOM.parserRunner",
+      "typeVersion": 1,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "action": "format",
+        "value": "{{ $now }}",
+        "dataPropertyName": "scrape_timestamp",
+        "custom": false,
+        "toFormat": "YYYY-MM-DD HH:mm:ss"
+      },
+      "name": "Add Timestamp",
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 1,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "apiKey": "{{ $credentials.dataramaApi?.apiKey }}",
+        "mode": "insert",
+        "name": "datarama_pricing_plans",
+        "slug": "datarama-pricing"
+      },
+      "name": "Store Pricing Data",
+      "type": "CUSTOM.storeData",
+      "typeVersion": 1,
+      "position": [1120, 300]
+    }
+  ],
+  "connections": {
+    "Interval Trigger": {
+      "main": [[{"node": "Scrape Pricing Page", "type": "main", "index": 0}]]
+    },
+    "Scrape Pricing Page": {
+      "main": [[{"node": "Extract Pricing Data", "type": "main", "index": 0}]]
+    },
+    "Extract Pricing Data": {
+      "main": [[{"node": "Add Timestamp", "type": "main", "index": 0}]]
+    },
+    "Add Timestamp": {
+      "main": [[{"node": "Store Pricing Data", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "saveManualExecutions": true,
+    "callerPolicyDefaultOption": "workflowsFromSameOwner"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+  "versionId": "1"
+}
+```

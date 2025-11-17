@@ -1,0 +1,115 @@
+{
+  "name": "Datarama Pricing - Scrape Every 10 Minutes",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 10
+            }
+          ]
+        }
+      },
+      "name": "Trigger - Every 10 min",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [
+        250,
+        250
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "scrape",
+        "operation": "fetch",
+        "apiKey": "YOUR_DATARAMA_API_KEY",
+        "baseUrl": "https://api.datarama.ai",
+        "targetUrl": "https://datarama.ai/pricing",
+        "poll": false,
+        "additionalParams": "{}"
+      },
+      "name": "Scrape",
+      "type": "CUSTOM.scrape",
+      "typeVersion": 1,
+      "position": [
+        550,
+        250
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "parser",
+        "operation": "run",
+        "apiKey": "YOUR_DATARAMA_API_KEY",
+        "baseUrl": "https://api.datarama.ai",
+        "parserId": 1,
+        "parserVersionId": 0,
+        "aiPrompt": "Extract the pricing plans and their prices from the incoming HTML. Return a JSON array of objects with keys: plan (string) and price (string or number). Example: [{ \"plan\": \"Basic\", \"price\": \"$9/mo\" }, ...]. If there are per-seat or per-month distinctions include them in the price string.",
+        "inputFormat": "text",
+        "inputProperty": "response.body"
+      },
+      "name": "Parser Runner",
+      "type": "CUSTOM.parserRunner",
+      "typeVersion": 1,
+      "position": [
+        900,
+        250
+      ]
+    },
+    {
+      "parameters": {
+        "apiKey": "YOUR_DATARAMA_API_KEY",
+        "baseUrl": "https://api.datarama.ai",
+        "dataKey": "data",
+        "mode": "insert",
+        "name": "Datarama Pricing",
+        "slug": "datarama-pricing"
+      },
+      "name": "Store Data",
+      "type": "CUSTOM.storeData",
+      "typeVersion": 1,
+      "position": [
+        1250,
+        250
+      ]
+    }
+  ],
+  "connections": {
+    "Trigger - Every 10 min": {
+      "main": [
+        [
+          {
+            "node": "Scrape",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrape": {
+      "main": [
+        [
+          {
+            "node": "Parser Runner",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parser Runner": {
+      "main": [
+        [
+          {
+            "node": "Store Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {}
+}

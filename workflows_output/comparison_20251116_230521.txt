@@ -1,0 +1,63 @@
+n8n Workflow Generation Comparison
+Generated at: 2025-11-16 23:05:21
+
+User Requirement:
+
+    I need to scrape this url every 10 minutes: https://datarama.ai/pricing and then store the prices for its plans.
+    
+
+================================================================================
+
+Model: openai/gpt-4.1
+Response Time: 24.15s
+Input Tokens: 49305
+Output Tokens: 800
+Cost: $0.105010
+
+--------------------------------------------------------------------------------
+
+Model: openai/gpt-4.1-mini
+Status: ERROR - Failed to fetch node details for 'CUSTOM.httpRequest': 404 Client Error: Not Found for url: https://api.datarama.ai/api/internal-nodes/nodes/CUSTOM.httpRequest/
+
+--------------------------------------------------------------------------------
+
+Model: openai/gpt-5-mini
+Response Time: 48.67s
+Input Tokens: 196059
+Output Tokens: 2301
+Cost: $0.053617
+
+--------------------------------------------------------------------------------
+
+Model: zai/glm-4.6
+Response Time: 21.13s
+Input Tokens: 228391
+Output Tokens: 865
+Cost: $0.104333
+
+--------------------------------------------------------------------------------
+
+Model: anthropic/claude-haiku-4.5
+Response Time: 14.44s
+Input Tokens: 100589
+Output Tokens: 957
+Cost: $0.105374
+
+--------------------------------------------------------------------------------
+
+Model: google/gemini-2.5-flash-lite
+Response Time: 1.04s
+Input Tokens: 581
+Output Tokens: 0
+Cost: $0.000058
+
+--------------------------------------------------------------------------------
+
+Model: google/gemini-2.5-flash
+Response Time: 15.39s
+Input Tokens: 87344
+Output Tokens: 788
+Cost: $0.028173
+
+--------------------------------------------------------------------------------
+

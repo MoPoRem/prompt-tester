@@ -1,0 +1,108 @@
+```json
+{
+  "name": "Scrape Datarama Pricing Every 10 Minutes",
+  "nodes": [
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyX",
+              "value": 10,
+              "unit": "minutes"
+            }
+          ]
+        }
+      },
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [200, 300]
+    },
+    {
+      "parameters": {
+        "resource": "scrape",
+        "operation": "fetch",
+        "apiKey": "",
+        "baseUrl": "https://api.datarama.ai",
+        "targetUrl": "https://datarama.ai/pricing",
+        "poll": false
+      },
+      "name": "Scrape Pricing Page",
+      "type": "CUSTOM.scrape",
+      "typeVersion": 1,
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "resource": "parser",
+        "operation": "run",
+        "apiKey": "",
+        "baseUrl": "https://api.datarama.ai",
+        "parserId": 1,
+        "inputFormat": "text",
+        "inputProperty": "response.body",
+        "aiPrompt": "Extract all pricing plan names and their prices from the HTML content."
+      },
+      "name": "Parse Prices",
+      "type": "CUSTOM.parserRunner",
+      "typeVersion": 1,
+      "position": [800, 300]
+    },
+    {
+      "parameters": {
+        "apiKey": "",
+        "baseUrl": "https://api.datarama.ai",
+        "dataKey": "data",
+        "mode": "insert",
+        "name": "Datarama Pricing Plans",
+        "slug": "datarama-pricing"
+      },
+      "name": "Store Pricing Data",
+      "type": "CUSTOM.storeData",
+      "typeVersion": 1,
+      "position": [1100, 300]
+    }
+  ],
+  "connections": {
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "Scrape Pricing Page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrape Pricing Page": {
+      "main": [
+        [
+          {
+            "node": "Parse Prices",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Prices": {
+      "main": [
+        [
+          {
+            "node": "Store Pricing Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {}
+}
+```
+**Instructions:**
+- Fill in your Datarama API key for all CUSTOM nodes (`Scrape Pricing Page`, `Parse Prices`, and `Store Pricing Data`).
+- Set or update `parserId` in `Parse Prices` for your custom parser that extracts plan names and prices. Adjust `aiPrompt` if needed for your parser configuration.
+- This workflow will scrape, parse, and store Datarama pricing every 10 minutes.

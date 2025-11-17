@@ -1,0 +1,74 @@
+```json
+{
+  "name": "Scrape Datarama Pricing Every 10 Minutes",
+  "nodes": [
+    {
+      "parameters": {
+        "interval": 10,
+        "unit": "minutes"
+      },
+      "name": "Interval",
+      "type": "n8n-nodes-base.interval",
+      "typeVersion": 1,
+      "position": [100, 100]
+    },
+    {
+      "parameters": {
+        "resource": "scrape",
+        "operation": "fetch",
+        "apiKey": "{{ $secrets.DATARAMA_API_KEY }}",
+        "baseUrl": "https://api.datarama.ai",
+        "targetUrl": "https://datarama.ai/pricing",
+        "poll": true,
+        "pollInterval": 1000,
+        "maxPollAttempts": 60
+      },
+      "name": "Scrape URL",
+      "type": "CUSTOM.scrape",
+      "typeVersion": 1,
+      "position": [300, 100]
+    },
+    {
+      "parameters": {
+        "resource": "parser",
+        "operation": "run",
+        "apiKey": "{{ $secrets.DATARAMA_API_KEY }}",
+        "baseUrl": "https://api.datarama.ai",
+        "parserId": 1,
+        "inputFormat": "text",
+        "inputProperty": "response.body"
+      },
+      "name": "Parser Runner",
+      "type": "CUSTOM.parserRunner",
+      "typeVersion": 1,
+      "position": [500, 100]
+    },
+    {
+      "parameters": {
+        "apiKey": "{{ $secrets.DATARAMA_API_KEY }}",
+        "baseUrl": "https://api.datarama.ai",
+        "dataKey": "data",
+        "mode": "insert",
+        "name": "datarama_pricing",
+        "slug": "datarama-pricing"
+      },
+      "name": "Store Data",
+      "type": "CUSTOM.storeData",
+      "typeVersion": 1,
+      "position": [700, 100]
+    }
+  ],
+  "connections": {
+    "Interval": {
+      "main": [[{"node": "Scrape URL", "type": "main", "index": 0}]]
+    },
+    "Scrape URL": {
+      "main": [[{"node": "Parser Runner", "type": "main", "index": 0}]]
+    },
+    "Parser Runner": {
+      "main": [[{"node": "Store Data", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {}
+}
+```

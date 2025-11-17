@@ -1,0 +1,100 @@
+```json
+{
+  "name": "Datarama Pricing Scraper",
+  "nodes": [
+    {
+      "parameters": {
+        "triggerTimes": [
+          {
+            "mode": "everyX",
+            "value": 10,
+            "unit": "minutes"
+          }
+        ]
+      },
+      "name": "Cron Trigger",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "resource": "scrape",
+        "operation": "fetch",
+        "apiKey": "YOUR_DATARAMA_API_KEY",
+        "baseUrl": "https://api.datarama.ai",
+        "targetUrl": "https://datarama.ai/pricing",
+        "poll": true
+      },
+      "name": "Scrape Datarama Pricing",
+      "type": "CUSTOM.scrape",
+      "typeVersion": 1,
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "resource": "parser",
+        "operation": "run",
+        "apiKey": "YOUR_DATARAMA_API_KEY",
+        "baseUrl": "https://api.datarama.ai",
+        "parserId": "YOUR_PARSER_ID",
+        "aiPrompt": "Extract the names of the plans and their corresponding prices from the HTML.",
+        "inputProperty": "response.body"
+      },
+      "name": "Parse Prices",
+      "type": "CUSTOM.parserRunner",
+      "typeVersion": 1,
+      "position": [750, 300]
+    },
+    {
+      "parameters": {
+        "apiKey": "YOUR_DATARAMA_API_KEY",
+        "baseUrl": "https://api.datarama.ai",
+        "dataKey": "json",
+        "name": "Datarama Pricing Data",
+        "mode": "insert"
+      },
+      "name": "Store Prices",
+      "type": "CUSTOM.storeData",
+      "typeVersion": 1,
+      "position": [1000, 300]
+    }
+  ],
+  "connections": {
+    "Cron Trigger": {
+      "main": [
+        [
+          {
+            "node": "Scrape Datarama Pricing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrape Datarama Pricing": {
+      "main": [
+        [
+          {
+            "node": "Parse Prices",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Prices": {
+      "main": [
+        [
+          {
+            "node": "Store Prices",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {}
+}
+```
